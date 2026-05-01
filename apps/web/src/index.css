@@ -4,4 +4,4 @@
 @import "@repo/tailwind-config";
 
 @source ".";
-@source "../../../packages/ui/src";
+@source "../../../packages/ui/src/**";

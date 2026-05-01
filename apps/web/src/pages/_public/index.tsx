@@ -1,9 +1,37 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CallToActionSection } from "./~components/~sections/-call-to-action-section";
+import { CategoriesSection } from "./~components/~sections/-categories-section";
+import { CompanyNumbersSection } from "./~components/~sections/-company-numbers-section";
+import { ForBusinessSection } from "./~components/~sections/-for-business-section";
+import { HowItWorksSection } from "./~components/~sections/-how-it-works-section";
+import { IntroSection } from "./~components/~sections/-intro-section";
 
 export const Route = createFileRoute("/_public/")({
-	component: RouteComponent,
+	component: LandingPage,
+	head: () => ({
+		meta: [
+			{
+				title:
+					"Orchestra | Encontre o serviço certo, com a empresa certa, na hora certa",
+			},
+		],
+	}),
 });
 
-function RouteComponent() {
-	return <div>Hello "/_public/"!</div>;
+function LandingPage() {
+	return (
+		<main className="flex w-full flex-col bg-surface">
+			<IntroSection />
+
+			<CategoriesSection />
+
+			<HowItWorksSection />
+
+			<ForBusinessSection />
+
+			<CompanyNumbersSection />
+
+			<CallToActionSection />
+		</main>
+	);
 }

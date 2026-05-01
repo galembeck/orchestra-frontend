@@ -1,27 +1,17 @@
+import { navColumns } from "@repo/core/constants/nav-columns";
 import { Instagram, Linkedin } from "lucide-react";
 import type { ComponentProps } from "react";
 import { Logo } from "../../molecules/logo/logo";
 
 export interface FooterProps extends ComponentProps<"footer"> {}
 
-const NAV_COLUMNS = [
-	{
-		title: "PRODUTO",
-		links: ["Como funciona", "Para empresas", "Categorias", "Preços"],
-	},
-	{
-		title: "EMPRESA",
-		links: ["Sobre nós", "Imprensa", "Carreiras"],
-	},
-	{
-		title: "SUPORTE",
-		links: ["Central de ajuda", "Termos · LGPD", "Contato"],
-	},
-] as const;
-
 export function Footer({ className, ...props }: FooterProps) {
 	return (
-		<footer className="w-full bg-surface-navy" data-slot="footer" {...props}>
+		<footer
+			className="w-full border-border-on-navy border-t bg-surface-navy"
+			data-slot="footer"
+			{...props}
+		>
 			<div className="flex flex-col gap-12 px-5 py-10 lg:px-20 lg:py-14">
 				<div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
 					<article className="flex flex-col gap-4 lg:max-w-xs">
@@ -34,7 +24,7 @@ export function Footer({ className, ...props }: FooterProps) {
 					</article>
 
 					<nav className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:gap-16">
-						{NAV_COLUMNS.map((col) => (
+						{navColumns.map((col) => (
 							<div className="flex flex-col gap-4" key={col.title}>
 								<span className="font-inter font-semibold text-foreground-inverse text-xs uppercase tracking-widest">
 									{col.title}
