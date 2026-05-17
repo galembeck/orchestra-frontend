@@ -3,6 +3,8 @@ import * as companyDocumentsSchema from "@repo/db/schema/company-documents.js";
 import * as companyMembersSchema from "@repo/db/schema/company-members.js";
 import * as rolePermissionsSchema from "@repo/db/schema/role-permissions.js";
 import * as rolesSchema from "@repo/db/schema/roles.js";
+import * as serviceCategoriesSchema from "@repo/db/schema/service-categories.js";
+import * as servicesSchema from "@repo/db/schema/services.js";
 import * as usersSchema from "@repo/db/schema/users.js";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
@@ -16,6 +18,8 @@ const schema = {
 	...companyMembersSchema,
 	...rolePermissionsSchema,
 	...rolesSchema,
+	...serviceCategoriesSchema,
+	...servicesSchema,
 	...usersSchema,
 };
 

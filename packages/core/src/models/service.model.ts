@@ -25,6 +25,8 @@ export interface ServiceDTO {
 	id: string;
 
 	isActive: boolean;
+	latitude?: number | null;
+	longitude?: number | null;
 	neighborhood: string;
 	number: string;
 	price?: number;
