@@ -26,6 +26,7 @@ export const Route = createFileRoute(
 
 function ServicesManagementPage() {
 	const { companySlug } = Route.useParams();
+
 	const { data: companies } = useMyCompanies();
 	const company = companies?.find((c) => c.slug === companySlug);
 

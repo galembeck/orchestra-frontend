@@ -15,8 +15,10 @@ import { Route as AuthSignInIndexRouteImport } from './pages/_auth/_sign-in/inde
 import { Route as AppPanelIndexRouteImport } from './pages/_app/panel/index'
 import { Route as AppPanelValidationIndexRouteImport } from './pages/_app/panel/validation/index'
 import { Route as AppPanelOverviewIndexRouteImport } from './pages/_app/panel/overview/index'
+import { Route as AppPanelAdministratorsIndexRouteImport } from './pages/_app/panel/administrators/index'
 import { Route as AppPanelValidationCompanyIdIndexRouteImport } from './pages/_app/panel/validation/$companyId/index'
 import { Route as AppPanelAdministratorsPlatformIndexRouteImport } from './pages/_app/panel/administrators/platform/index'
+import { Route as AppPanelAdministratorsInternalIndexRouteImport } from './pages/_app/panel/administrators/internal/index'
 
 const AuthSignInLayoutRoute = AuthSignInLayoutRouteImport.update({
   id: '/_auth/_sign-in',
@@ -47,6 +49,12 @@ const AppPanelOverviewIndexRoute = AppPanelOverviewIndexRouteImport.update({
   path: '/overview/',
   getParentRoute: () => AppPanelLayoutRoute,
 } as any)
+const AppPanelAdministratorsIndexRoute =
+  AppPanelAdministratorsIndexRouteImport.update({
+    id: '/administrators/',
+    path: '/administrators/',
+    getParentRoute: () => AppPanelLayoutRoute,
+  } as any)
 const AppPanelValidationCompanyIdIndexRoute =
   AppPanelValidationCompanyIdIndexRouteImport.update({
     id: '/validation/$companyId/',
@@ -59,21 +67,31 @@ const AppPanelAdministratorsPlatformIndexRoute =
     path: '/administrators/platform/',
     getParentRoute: () => AppPanelLayoutRoute,
   } as any)
+const AppPanelAdministratorsInternalIndexRoute =
+  AppPanelAdministratorsInternalIndexRouteImport.update({
+    id: '/administrators/internal/',
+    path: '/administrators/internal/',
+    getParentRoute: () => AppPanelLayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/panel': typeof AppPanelLayoutRouteWithChildren
   '/': typeof AuthSignInIndexRoute
   '/panel/': typeof AppPanelIndexRoute
+  '/panel/administrators/': typeof AppPanelAdministratorsIndexRoute
   '/panel/overview/': typeof AppPanelOverviewIndexRoute
   '/panel/validation/': typeof AppPanelValidationIndexRoute
+  '/panel/administrators/internal/': typeof AppPanelAdministratorsInternalIndexRoute
   '/panel/administrators/platform/': typeof AppPanelAdministratorsPlatformIndexRoute
   '/panel/validation/$companyId/': typeof AppPanelValidationCompanyIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/panel': typeof AppPanelIndexRoute
   '/': typeof AuthSignInIndexRoute
+  '/panel/administrators': typeof AppPanelAdministratorsIndexRoute
   '/panel/overview': typeof AppPanelOverviewIndexRoute
   '/panel/validation': typeof AppPanelValidationIndexRoute
+  '/panel/administrators/internal': typeof AppPanelAdministratorsInternalIndexRoute
   '/panel/administrators/platform': typeof AppPanelAdministratorsPlatformIndexRoute
   '/panel/validation/$companyId': typeof AppPanelValidationCompanyIdIndexRoute
 }
@@ -83,8 +101,10 @@ export interface FileRoutesById {
   '/_auth/_sign-in': typeof AuthSignInLayoutRouteWithChildren
   '/_app/panel/': typeof AppPanelIndexRoute
   '/_auth/_sign-in/': typeof AuthSignInIndexRoute
+  '/_app/panel/administrators/': typeof AppPanelAdministratorsIndexRoute
   '/_app/panel/overview/': typeof AppPanelOverviewIndexRoute
   '/_app/panel/validation/': typeof AppPanelValidationIndexRoute
+  '/_app/panel/administrators/internal/': typeof AppPanelAdministratorsInternalIndexRoute
   '/_app/panel/administrators/platform/': typeof AppPanelAdministratorsPlatformIndexRoute
   '/_app/panel/validation/$companyId/': typeof AppPanelValidationCompanyIdIndexRoute
 }
@@ -94,16 +114,20 @@ export interface FileRouteTypes {
     | '/panel'
     | '/'
     | '/panel/'
+    | '/panel/administrators/'
     | '/panel/overview/'
     | '/panel/validation/'
+    | '/panel/administrators/internal/'
     | '/panel/administrators/platform/'
     | '/panel/validation/$companyId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/panel'
     | '/'
+    | '/panel/administrators'
     | '/panel/overview'
     | '/panel/validation'
+    | '/panel/administrators/internal'
     | '/panel/administrators/platform'
     | '/panel/validation/$companyId'
   id:
@@ -112,8 +136,10 @@ export interface FileRouteTypes {
     | '/_auth/_sign-in'
     | '/_app/panel/'
     | '/_auth/_sign-in/'
+    | '/_app/panel/administrators/'
     | '/_app/panel/overview/'
     | '/_app/panel/validation/'
+    | '/_app/panel/administrators/internal/'
     | '/_app/panel/administrators/platform/'
     | '/_app/panel/validation/$companyId/'
   fileRoutesById: FileRoutesById
@@ -167,6 +193,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPanelOverviewIndexRouteImport
       parentRoute: typeof AppPanelLayoutRoute
     }
+    '/_app/panel/administrators/': {
+      id: '/_app/panel/administrators/'
+      path: '/administrators'
+      fullPath: '/panel/administrators/'
+      preLoaderRoute: typeof AppPanelAdministratorsIndexRouteImport
+      parentRoute: typeof AppPanelLayoutRoute
+    }
     '/_app/panel/validation/$companyId/': {
       id: '/_app/panel/validation/$companyId/'
       path: '/validation/$companyId'
@@ -181,21 +214,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPanelAdministratorsPlatformIndexRouteImport
       parentRoute: typeof AppPanelLayoutRoute
     }
+    '/_app/panel/administrators/internal/': {
+      id: '/_app/panel/administrators/internal/'
+      path: '/administrators/internal'
+      fullPath: '/panel/administrators/internal/'
+      preLoaderRoute: typeof AppPanelAdministratorsInternalIndexRouteImport
+      parentRoute: typeof AppPanelLayoutRoute
+    }
   }
 }
 
 interface AppPanelLayoutRouteChildren {
   AppPanelIndexRoute: typeof AppPanelIndexRoute
+  AppPanelAdministratorsIndexRoute: typeof AppPanelAdministratorsIndexRoute
   AppPanelOverviewIndexRoute: typeof AppPanelOverviewIndexRoute
   AppPanelValidationIndexRoute: typeof AppPanelValidationIndexRoute
+  AppPanelAdministratorsInternalIndexRoute: typeof AppPanelAdministratorsInternalIndexRoute
   AppPanelAdministratorsPlatformIndexRoute: typeof AppPanelAdministratorsPlatformIndexRoute
   AppPanelValidationCompanyIdIndexRoute: typeof AppPanelValidationCompanyIdIndexRoute
 }
 
 const AppPanelLayoutRouteChildren: AppPanelLayoutRouteChildren = {
   AppPanelIndexRoute: AppPanelIndexRoute,
+  AppPanelAdministratorsIndexRoute: AppPanelAdministratorsIndexRoute,
   AppPanelOverviewIndexRoute: AppPanelOverviewIndexRoute,
   AppPanelValidationIndexRoute: AppPanelValidationIndexRoute,
+  AppPanelAdministratorsInternalIndexRoute:
+    AppPanelAdministratorsInternalIndexRoute,
   AppPanelAdministratorsPlatformIndexRoute:
     AppPanelAdministratorsPlatformIndexRoute,
   AppPanelValidationCompanyIdIndexRoute: AppPanelValidationCompanyIdIndexRoute,

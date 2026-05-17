@@ -11,7 +11,10 @@ export const dashboardData = {
 		{
 			title: "Administradores",
 			icon: ShieldUser,
-			items: [{ title: "Plataforma", url: "/panel/administrators/platform" }],
+			items: [
+				{ title: "Plataforma pública", url: "/panel/administrators/platform" },
+				{ title: "Gestão interna", url: "/panel/administrators/internal" },
+			],
 		},
 		{
 			title: "Validação de cadastro",

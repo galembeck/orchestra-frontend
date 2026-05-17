@@ -37,11 +37,7 @@ export function useAuth() {
 					: "Redirecionando para o painel administrativo de sua empresa...",
 			});
 
-			if (isClient) {
-				navigate({ to: "/" });
-			} else {
-				navigate({ to: "/admin/dashboard" });
-			}
+			navigate({ to: "/" });
 		},
 
 		onError: (err) => {

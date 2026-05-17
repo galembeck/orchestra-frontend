@@ -18,7 +18,10 @@ export const Route = createFileRoute("/_app/panel/administrators/platform/")({
 	component: PlatformAdministratorsPage,
 	head: () => ({
 		meta: [
-			{ title: "Administradores — Plataforma | Painel - orchestra.admin" },
+			{
+				title:
+					"Administradores — Plataforma pública | Painel - orchestra.admin",
+			},
 		],
 	}),
 });
@@ -26,7 +29,7 @@ export const Route = createFileRoute("/_app/panel/administrators/platform/")({
 function PlatformAdministratorsPage() {
 	const queryClient = useQueryClient();
 	const [selectedUser, setSelectedUser] = useState<AdminUserListItem | null>(
-		null,
+		null
 	);
 
 	const { data: users = [] } = useQuery(adminUsersQueryOptions);
@@ -62,7 +65,7 @@ function PlatformAdministratorsPage() {
 				</span>
 
 				<h1 className="font-instrument-serif font-medium text-3xl text-foreground-primary">
-					Plataforma
+					Plataforma pública
 				</h1>
 
 				<p className="font-inter text-[13px] text-foreground-tertiary">
@@ -71,20 +74,20 @@ function PlatformAdministratorsPage() {
 				</p>
 			</div>
 
-			<AdministratorsTable users={users} onEditPermissions={setSelectedUser} />
+			<AdministratorsTable onEditPermissions={setSelectedUser} users={users} />
 
 			<EditPermissionsSheet
-				user={selectedUser}
-				roles={roles}
 				onClose={() => setSelectedUser(null)}
-				onSaveRole={(userId, roleId) => {
-					handleUpdateRole({ id: userId, roleId });
-					// Don't close here — onSavePermissions always fires last
-				}}
 				onSavePermissions={(userId, permissionOverrides) => {
 					handleUpdatePermissions({ id: userId, permissionOverrides });
 					setSelectedUser(null);
 				}}
+				onSaveRole={(userId, roleId) => {
+					handleUpdateRole({ id: userId, roleId });
+					// Don't close here — onSavePermissions always fires last
+				}}
+				roles={roles}
+				user={selectedUser}
 			/>
 		</div>
 	);

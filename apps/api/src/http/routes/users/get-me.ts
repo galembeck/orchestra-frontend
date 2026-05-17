@@ -54,6 +54,7 @@ const getMeResponseSchema = z.object({
 	worker: workerContextSchema.optional(),
 });
 
+// biome-ignore lint/suspicious/useAwait: required by @biome
 export const getMeRoute: FastifyPluginAsyncZod = async (app) => {
 	app.get(
 		"/user/me",
@@ -178,6 +179,6 @@ export const getMeRoute: FastifyPluginAsyncZod = async (app) => {
 					roleName: membership.roleName ?? null,
 				},
 			});
-		},
+		}
 	);
 };
