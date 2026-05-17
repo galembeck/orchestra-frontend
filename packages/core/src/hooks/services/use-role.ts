@@ -33,11 +33,6 @@ export function useRolePermissions(
 
 		queryFn: () => {
 			if (!(companyId && roleId)) {
-				toast.error("Não foi possível carregar as permissões.", {
-					description:
-						"O identficador (ID) da empresa ou do cargo está ausente.",
-				});
-
 				return null;
 			}
 

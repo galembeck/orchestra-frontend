@@ -1,7 +1,8 @@
 import { companies } from "@repo/db/schema/companies.js";
+import { companyMembers } from "@repo/db/schema/company-members.js";
 import { serviceCategories } from "@repo/db/schema/service-categories.js";
 import { services } from "@repo/db/schema/services.js";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { authenticate } from "@/http/middlewares/authenticate.js";
@@ -23,6 +24,7 @@ export const getCompanyServicesRoute: FastifyPluginAsyncZod = async (app) => {
 				response: {
 					200: z.array(serviceDTOSchema),
 					401: z.object({ message: z.string() }),
+					403: z.object({ message: z.string() }),
 					404: z.object({ message: z.string() }),
 				},
 			},
@@ -38,6 +40,21 @@ export const getCompanyServicesRoute: FastifyPluginAsyncZod = async (app) => {
 
 			if (company.length === 0) {
 				return reply.status(404).send({ message: "Company not found" });
+			}
+
+			const membership = await app.db
+				.select({ id: companyMembers.id })
+				.from(companyMembers)
+				.where(
+					and(
+						eq(companyMembers.companyId, companyId),
+						eq(companyMembers.userId, req.user.sub),
+					),
+				)
+				.limit(1);
+
+			if (membership.length === 0) {
+				return reply.status(403).send({ message: "Forbidden" });
 			}
 
 			const rows = await app.db

@@ -29,7 +29,7 @@ async function geocodeAddress(
 			{
 				headers: {
 					"User-Agent":
-						"orchestra-platform/1.0 (contact: galembeckpedro@gmail.com)",
+						"orchestra-platform/1.0 (contact: contato@orchestra.app)",
 				},
 				signal: AbortSignal.timeout(3000),
 			},
