@@ -7,10 +7,12 @@ import type {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { PermissionKey } from "../../constants/services/role/permissions.js";
 import { useAuth } from "../../providers/auth-provider.js";
 import { authService } from "../../services/auth.service.js";
 import { companyService } from "../../services/company.service.js";
 import type { ApiException } from "../../types/api-error.js";
+import { useRolePermissions } from "./use-role.js";
 
 export function useRegisterCompany() {
 	const { refetch } = useAuth();
@@ -340,4 +342,25 @@ export function useRejectCompany() {
 				description: err.message,
 			}),
 	});
+}
+
+export function useMyMembership(companyId: string | undefined) {
+	const { user } = useAuth();
+	const { data: members } = useCompanyMembers(companyId);
+	return members?.find((m) => m.userId === user?.id) ?? null;
+}
+
+export function useCanManageServices(companyId: string | undefined): boolean {
+	const membership = useMyMembership(companyId);
+	const { data: permissions } = useRolePermissions(
+		companyId,
+		membership?.roleId ?? undefined
+	);
+	if (!membership) {
+		return false;
+	}
+	if (membership.isOwner) {
+		return true;
+	}
+	return permissions?.includes(PermissionKey.ServiceCreate) ?? false;
 }
