@@ -7,6 +7,12 @@ export const companyApprovalStatusEnum = pgEnum("company_approval_status", [
 	"REJECTED",
 ]);
 
+export const companySegmentEnum = pgEnum("company_segment", [
+	"RESIDENTIAL",
+	"BUSINESS",
+	"INDUSTRIAL",
+]);
+
 export const companies = pgTable("companies", {
 	id: uuid("id").primaryKey().defaultRandom(),
 	socialReason: varchar("social_reason", { length: 255 }).notNull(),
@@ -16,6 +22,7 @@ export const companies = pgTable("companies", {
 	ownerId: uuid("owner_id")
 		.notNull()
 		.references(() => users.id, { onDelete: "restrict" }),
+	segment: companySegmentEnum("segment").notNull().default("RESIDENTIAL"),
 	approvalStatus: companyApprovalStatusEnum("approval_status")
 		.notNull()
 		.default("PENDING"),

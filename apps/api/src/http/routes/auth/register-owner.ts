@@ -127,6 +127,7 @@ export const registerOwnerRoute: FastifyPluginAsyncZod = async (app) => {
 						slug: companySlug,
 						cnpj: company.cnpj,
 						ownerId: user.id,
+						segment: company.segment,
 						approvalStatus: "PENDING",
 						zipCode: company.zipcode,
 						street: company.address,

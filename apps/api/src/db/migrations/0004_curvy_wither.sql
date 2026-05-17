@@ -1,0 +1,2 @@
+CREATE TYPE "public"."company_segment" AS ENUM('RESIDENTIAL', 'BUSINESS', 'INDUSTRIAL');--> statement-breakpoint
+ALTER TABLE "companies" ADD COLUMN "segment" "company_segment" DEFAULT 'RESIDENTIAL' NOT NULL;

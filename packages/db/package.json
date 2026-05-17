@@ -26,6 +26,14 @@
 		"./schema/company-documents.js": {
 			"types": "./dist/schema/company-documents.d.ts",
 			"default": "./dist/schema/company-documents.js"
+		},
+		"./schema/service-categories.js": {
+			"types": "./dist/schema/service-categories.d.ts",
+			"default": "./dist/schema/service-categories.js"
+		},
+		"./schema/services.js": {
+			"types": "./dist/schema/services.d.ts",
+			"default": "./dist/schema/services.js"
 		}
 	},
 	"scripts": {
