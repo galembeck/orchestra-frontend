@@ -4,6 +4,7 @@ interface ServicesListingCardProps {
 	category: string;
 	companyName: string;
 	distance: string;
+	distanceUnavailable?: boolean;
 	estimatedTime: string;
 	icon: LucideIcon;
 	neighborhood: string;
@@ -22,6 +23,7 @@ export function ServicesListingCard({
 	category,
 	reviews,
 	distance,
+	distanceUnavailable,
 	neighborhood,
 	estimatedTime,
 	price,
@@ -55,7 +57,7 @@ export function ServicesListingCard({
 				<div className="flex items-center gap-3 font-jetbrains-mono text-[12px] text-foreground-tertiary">
 					<div className="flex items-center gap-1">
 						<MapPin className="h-3.5 w-3.5" />
-						{distance} km
+						{distanceUnavailable ? "—" : `${distance} km`}
 					</div>
 					<span>·</span>
 					<span>{neighborhood}</span>
