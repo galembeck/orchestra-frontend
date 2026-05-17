@@ -24,6 +24,10 @@ export const PermissionKey = {
 	RoleCreate: "role:create",
 	RoleUpdate: "role:update",
 	RoleDelete: "role:delete",
+
+	ServiceCreate: "service:create",
+	ServiceUpdate: "service:update",
+	ServiceDelete: "service:delete",
 } as const;
 
 export type PermissionKeyValue =
