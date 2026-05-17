@@ -1,4 +1,7 @@
-import { useMyCompanies } from "@repo/core/hooks/services/use-company";
+import {
+	useCanManageServices,
+	useMyCompanies,
+} from "@repo/core/hooks/services/use-company";
 import { useCompanyServices } from "@repo/core/hooks/services/use-services";
 import {
 	Table,
@@ -12,7 +15,7 @@ import { CreateServiceDialog } from "./~components/-create-service-dialog";
 import { ServiceTableRow } from "./~components/-service-table-row";
 
 export const Route = createFileRoute(
-	"/app/_company/_(organization-set)/$companySlug/_operation/services/"
+	"/app/_company/_(organization-set)/$companySlug/_operation/services/",
 )({
 	component: ServicesManagementPage,
 	head: () => ({
@@ -31,6 +34,7 @@ function ServicesManagementPage() {
 	const company = companies?.find((c) => c.slug === companySlug);
 
 	const { data: services, isLoading } = useCompanyServices(company?.id);
+	const canManageServices = useCanManageServices(company?.id);
 
 	if (!company) {
 		return null;
@@ -54,7 +58,7 @@ function ServicesManagementPage() {
 					</p>
 				</div>
 
-				<CreateServiceDialog company={company} />
+				{canManageServices && <CreateServiceDialog company={company} />}
 			</header>
 
 			<section className="overflow-hidden rounded-[14px] border border-border bg-surface-paper-soft">
