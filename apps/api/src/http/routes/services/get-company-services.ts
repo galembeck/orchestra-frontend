@@ -5,31 +5,10 @@ import { eq } from "drizzle-orm";
 import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { z } from "zod";
 import { authenticate } from "@/http/middlewares/authenticate.js";
-
-const serviceDTOSchema = z.object({
-	id: z.string(),
-	companyId: z.string(),
-	companyFantasyName: z.string(),
-	categoryId: z.string(),
-	categoryName: z.string(),
-	categoryIcon: z.string(),
-	serviceType: z.string(),
-	price: z.number().nullable().optional(),
-	budgetable: z.boolean().optional(),
-	isActive: z.boolean(),
-	latitude: z.number().nullable().optional(),
-	longitude: z.number().nullable().optional(),
-	address: z.string(),
-	number: z.string(),
-	complement: z.string().nullable().optional(),
-	neighborhood: z.string(),
-	city: z.string(),
-	state: z.string(),
-	zipcode: z.string(),
-	rating: z.number(),
-	reviewsCount: z.number(),
-	createdAt: z.string(),
-});
+import {
+	mapServiceRow,
+	serviceDTOSchema,
+} from "@/schemas/service/service.schema.js";
 
 export const getCompanyServicesRoute: FastifyPluginAsyncZod = async (app) => {
 	app.get(
@@ -44,11 +23,22 @@ export const getCompanyServicesRoute: FastifyPluginAsyncZod = async (app) => {
 				response: {
 					200: z.array(serviceDTOSchema),
 					401: z.object({ message: z.string() }),
+					404: z.object({ message: z.string() }),
 				},
 			},
 		},
-		async (req) => {
+		async (req, reply) => {
 			const { companyId } = req.params;
+
+			const company = await app.db
+				.select({ id: companies.id })
+				.from(companies)
+				.where(eq(companies.id, companyId))
+				.limit(1);
+
+			if (company.length === 0) {
+				return reply.status(404).send({ message: "Company not found" });
+			}
 
 			const rows = await app.db
 				.select({
@@ -81,30 +71,7 @@ export const getCompanyServicesRoute: FastifyPluginAsyncZod = async (app) => {
 				)
 				.where(eq(services.companyId, companyId));
 
-			return rows.map((row) => ({
-				...row,
-				price:
-					row.price !== null && row.price !== undefined
-						? Number(row.price)
-						: null,
-				latitude:
-					row.latitude !== null && row.latitude !== undefined
-						? Number(row.latitude)
-						: null,
-				longitude:
-					row.longitude !== null && row.longitude !== undefined
-						? Number(row.longitude)
-						: null,
-				address: row.address ?? "",
-				number: row.number ?? "",
-				neighborhood: row.neighborhood ?? "",
-				city: row.city ?? "",
-				state: row.state ?? "",
-				zipcode: row.zipcode ?? "",
-				rating: 0,
-				reviewsCount: 0,
-				createdAt: row.createdAt.toISOString(),
-			}));
+			return rows.map(mapServiceRow);
 		},
 	);
 };

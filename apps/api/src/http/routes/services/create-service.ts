@@ -7,32 +7,11 @@ import { z } from "zod";
 import { authenticate } from "@/http/middlewares/authenticate.js";
 import { requirePermission } from "@/http/middlewares/authorize.js";
 import { notFound } from "@/lib/errors.js";
+import {
+	mapServiceRow,
+	serviceDTOSchema,
+} from "@/schemas/service/service.schema.js";
 import { PermissionKey } from "@/types/permissions.js";
-
-const serviceDTOSchema = z.object({
-	id: z.string(),
-	companyId: z.string(),
-	companyFantasyName: z.string(),
-	categoryId: z.string(),
-	categoryName: z.string(),
-	categoryIcon: z.string(),
-	serviceType: z.string(),
-	price: z.number().nullable().optional(),
-	budgetable: z.boolean().optional(),
-	isActive: z.boolean(),
-	latitude: z.number().nullable().optional(),
-	longitude: z.number().nullable().optional(),
-	address: z.string(),
-	number: z.string(),
-	complement: z.string().nullable().optional(),
-	neighborhood: z.string(),
-	city: z.string(),
-	state: z.string(),
-	zipcode: z.string(),
-	rating: z.number(),
-	reviewsCount: z.number(),
-	createdAt: z.string(),
-});
 
 async function geocodeAddress(
 	street: string | null,
@@ -48,7 +27,11 @@ async function geocodeAddress(
 		const res = await fetch(
 			`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`,
 			{
-				headers: { "User-Agent": "orchestra-platform/1.0" },
+				headers: {
+					"User-Agent":
+						"orchestra-platform/1.0 (contact: galembeckpedro@gmail.com)",
+				},
+				signal: AbortSignal.timeout(3000),
 			},
 		);
 		if (!res.ok) return null;
@@ -84,6 +67,7 @@ export const createServiceRoute: FastifyPluginAsyncZod = async (app) => {
 					401: z.object({ message: z.string() }),
 					403: z.object({ message: z.string() }),
 					404: z.object({ message: z.string() }),
+					500: z.object({ message: z.string() }),
 				},
 			},
 		},
@@ -106,6 +90,18 @@ export const createServiceRoute: FastifyPluginAsyncZod = async (app) => {
 				throw notFound("company");
 			}
 
+			const category = await app.db
+				.select({ id: serviceCategories.id })
+				.from(serviceCategories)
+				.where(eq(serviceCategories.id, body.categoryId))
+				.limit(1);
+
+			if (category.length === 0) {
+				return reply
+					.status(404)
+					.send({ message: "Service category not found" });
+			}
+
 			const coords = await geocodeAddress(
 				company.street,
 				company.number,
@@ -125,6 +121,10 @@ export const createServiceRoute: FastifyPluginAsyncZod = async (app) => {
 					longitude: coords?.lng.toString(),
 				})
 				.returning({ id: services.id });
+
+			if (!inserted) {
+				return reply.status(500).send({ message: "Failed to create service" });
+			}
 
 			const rows = await app.db
 				.select({
@@ -159,30 +159,13 @@ export const createServiceRoute: FastifyPluginAsyncZod = async (app) => {
 
 			const row = rows[0];
 
-			return reply.status(201).send({
-				...row,
-				price:
-					row.price !== null && row.price !== undefined
-						? Number(row.price)
-						: null,
-				latitude:
-					row.latitude !== null && row.latitude !== undefined
-						? Number(row.latitude)
-						: null,
-				longitude:
-					row.longitude !== null && row.longitude !== undefined
-						? Number(row.longitude)
-						: null,
-				address: row.address ?? "",
-				number: row.number ?? "",
-				neighborhood: row.neighborhood ?? "",
-				city: row.city ?? "",
-				state: row.state ?? "",
-				zipcode: row.zipcode ?? "",
-				rating: 0,
-				reviewsCount: 0,
-				createdAt: row.createdAt.toISOString(),
-			});
+			if (!row) {
+				return reply
+					.status(500)
+					.send({ message: "Failed to fetch created service" });
+			}
+
+			return reply.status(201).send(mapServiceRow(row));
 		},
 	);
 };
